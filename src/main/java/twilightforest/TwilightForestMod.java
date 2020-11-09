@@ -94,8 +94,8 @@ public class TwilightForestMod {
 //		TFDimensions.BIOME_PROVIDER_TYPES.register(modbus);
 //		TFDimensions.CHUNK_GENERATOR_TYPES.register(modbus);
 //		TFDimensions.MOD_DIMENSIONS.register(modbus);
-		new TwilightFeatures(); // TODO make deferred registry once available
-
+		new TwilightFeatures(); // TODO make deferred registry once available - Done!
+		
 		// TODO: move these to proper spots
 		// WorldProviderTwilightForest.syncFromConfig();
 

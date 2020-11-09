@@ -46,7 +46,7 @@ public class DangleFromTreeDecorator extends TreeDecorator {
 
     @Override
     protected TreeDecoratorType<DangleFromTreeDecorator> func_230380_a_() {
-        return TwilightFeatures.DANGLING_DECORATOR;
+        return TwilightFeatures.DANGLING_DECORATOR.get();
     }
 
     @Override

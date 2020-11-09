@@ -48,7 +48,7 @@ public class LeafSpheroidFoliagePlacer extends FoliagePlacer {
 
     @Override
     protected FoliagePlacerType<LeafSpheroidFoliagePlacer> func_230371_a_() {
-        return TwilightFeatures.FOLIAGE_SPHEROID;
+        return TwilightFeatures.FOLIAGE_SPHEROID.get();
     }
 
     @Override // place foliage

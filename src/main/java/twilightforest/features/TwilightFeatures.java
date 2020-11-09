@@ -21,6 +21,10 @@ import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
 import net.minecraft.world.gen.trunkplacer.AbstractTrunkPlacer;
 import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
 import net.minecraft.world.gen.trunkplacer.TrunkPlacerType;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import twilightforest.TwilightForestMod;
 import twilightforest.block.BlockTFFirefly;
 import twilightforest.block.TFBlocks;
@@ -29,18 +33,29 @@ import twilightforest.world.feature.TFBiomeFeatures;
 import twilightforest.world.feature.config.TFTreeFeatureConfig;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public final class TwilightFeatures {
+	
+	public static final DeferredRegister<FoliagePlacerType<?>> FOLIAGE_PLACERS = DeferredRegister.create(ForgeRegistries.FOLIAGE_PLACER_TYPES, TwilightForestMod.ID);
+	public static final DeferredRegister<TreeDecoratorType<?>> TREE_DECORATORS = DeferredRegister.create(ForgeRegistries.TREE_DECORATOR_TYPES, TwilightForestMod.ID); 
+	//public static final DeferredRegister<TreeDecoratorType<?>> TRUNKS = DeferredRegister.create(ForgeRegistries., modid)
+	
     public static final TrunkPlacerType<BranchingTrunkPlacer> TRUNK_BRANCHING = registerTrunk(TwilightForestMod.prefix("branching_trunk_placer"), BranchingTrunkPlacer.CODEC);
     public static final TrunkPlacerType<TrunkRiser> TRUNK_RISER = registerTrunk(TwilightForestMod.prefix("trunk_mover_upper"), TrunkRiser.CODEC);
     public static final TrunkPlacerType<HollowTrunkPlacer> HOLLOW_TRUNK = registerTrunk(TwilightForestMod.prefix("hollow_trunk_placer"), HollowTrunkPlacer.CODEC);
 
-    public static final FoliagePlacerType<LeafSpheroidFoliagePlacer> FOLIAGE_SPHEROID = registerFoliage(TwilightForestMod.prefix("spheroid_foliage_placer"), LeafSpheroidFoliagePlacer.CODEC);
+    public static final RegistryObject<FoliagePlacerType<LeafSpheroidFoliagePlacer>> FOLIAGE_SPHEROID = registerFoliage(TwilightForestMod.prefix("spheroid_foliage_placer"), LeafSpheroidFoliagePlacer.CODEC);
 
-    public static final TreeDecoratorType<TrunkSideDecorator> TRUNKSIDE_DECORATOR = registerTreeFeature(TwilightForestMod.prefix("trunkside_decorator"), TrunkSideDecorator.CODEC);
-    public static final TreeDecoratorType<TreeRootsDecorator> TREE_ROOTS = registerTreeFeature(TwilightForestMod.prefix("tree_roots"), TreeRootsDecorator.CODEC);
-    public static final TreeDecoratorType<DangleFromTreeDecorator> DANGLING_DECORATOR = registerTreeFeature(TwilightForestMod.prefix("dangle_from_tree_decorator"), DangleFromTreeDecorator.CODEC);
+    public static final RegistryObject<TreeDecoratorType<TrunkSideDecorator>> TRUNKSIDE_DECORATOR = registerTreeFeature(TwilightForestMod.prefix("trunkside_decorator"), TrunkSideDecorator.CODEC);
+    public static final RegistryObject<TreeDecoratorType<TreeRootsDecorator>> TREE_ROOTS = registerTreeFeature(TwilightForestMod.prefix("tree_roots"), TreeRootsDecorator.CODEC);
+    public static final RegistryObject<TreeDecoratorType<DangleFromTreeDecorator>> DANGLING_DECORATOR = registerTreeFeature(TwilightForestMod.prefix("dangle_from_tree_decorator"), DangleFromTreeDecorator.CODEC);
 
+    public TwilightFeatures() {
+		TwilightFeatures.FOLIAGE_PLACERS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		TwilightFeatures.TREE_DECORATORS.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
+    
     public static final class BlockStates {
         //Blockstates
         public static final BlockState WATER = net.minecraft.block.Blocks.WATER.getDefaultState();
@@ -340,8 +355,9 @@ public final class TwilightFeatures {
         );
     }
 
-    private static <P extends FoliagePlacer> FoliagePlacerType<P> registerFoliage(ResourceLocation name, Codec<P> codec) {
-        return Registry.register(Registry.FOLIAGE_PLACER_TYPE, name, new FoliagePlacerType<>(codec));
+    private static <P extends FoliagePlacer> RegistryObject<FoliagePlacerType<P>> registerFoliage(ResourceLocation name, Codec<P> codec) {
+    	return FOLIAGE_PLACERS.register(name.getPath(), () -> new FoliagePlacerType<P>(codec));
+        //return Registry.register(Registry.FOLIAGE_PLACER_TYPE, name, new FoliagePlacerType<>(codec));
     }
 
     private static <P extends AbstractTrunkPlacer> TrunkPlacerType<P> registerTrunk(ResourceLocation name, Codec<P> codec) {
@@ -349,9 +365,10 @@ public final class TwilightFeatures {
         return Registry.register(Registry.TRUNK_REPLACER, name, new TrunkPlacerType<>(codec));
     }
 
-    private static <P extends TreeDecorator> TreeDecoratorType<P> registerTreeFeature(ResourceLocation name, Codec<P> codec) {
+    private static <P extends TreeDecorator> RegistryObject<TreeDecoratorType<P>> registerTreeFeature(ResourceLocation name, Codec<P> codec) {
         // TRUNK_REPLACER is wrong, it only places, not replacing
-        return Registry.register(Registry.TREE_DECORATOR_TYPE, name, new TreeDecoratorType<>(codec));
+    	return TREE_DECORATORS.register(name.getPath(), () -> new TreeDecoratorType<P>(codec));
+        //return Registry.register(Registry.TREE_DECORATOR_TYPE, name, new TreeDecoratorType<>(codec));
     }
 
     protected static <FC extends IFeatureConfig, F extends Feature<FC>> ConfiguredFeature<FC, F> registerWorldFeature(ResourceLocation rl, ConfiguredFeature<FC, F> feature) {
