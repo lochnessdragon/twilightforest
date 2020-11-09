@@ -357,7 +357,6 @@ public final class TwilightFeatures {
 
     private static <P extends FoliagePlacer> RegistryObject<FoliagePlacerType<P>> registerFoliage(ResourceLocation name, Codec<P> codec) {
     	return FOLIAGE_PLACERS.register(name.getPath(), () -> new FoliagePlacerType<P>(codec));
-        //return Registry.register(Registry.FOLIAGE_PLACER_TYPE, name, new FoliagePlacerType<>(codec));
     }
 
     private static <P extends AbstractTrunkPlacer> TrunkPlacerType<P> registerTrunk(ResourceLocation name, Codec<P> codec) {
@@ -368,7 +367,6 @@ public final class TwilightFeatures {
     private static <P extends TreeDecorator> RegistryObject<TreeDecoratorType<P>> registerTreeFeature(ResourceLocation name, Codec<P> codec) {
         // TRUNK_REPLACER is wrong, it only places, not replacing
     	return TREE_DECORATORS.register(name.getPath(), () -> new TreeDecoratorType<P>(codec));
-        //return Registry.register(Registry.TREE_DECORATOR_TYPE, name, new TreeDecoratorType<>(codec));
     }
 
     protected static <FC extends IFeatureConfig, F extends Feature<FC>> ConfiguredFeature<FC, F> registerWorldFeature(ResourceLocation rl, ConfiguredFeature<FC, F> feature) {
